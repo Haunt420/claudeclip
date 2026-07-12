@@ -1,0 +1,9 @@
+-keep class * extends android.accessibilityservice.AccessibilityService
+-keep class com.haunted421.clipbubdeep.** { *; }
+-keep class * extends androidx.room.RoomDatabase
+-dontwarn androidx.room.paging.**
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-dontwarn sun.misc.**
+-keep class com.google.gson.** { *; }

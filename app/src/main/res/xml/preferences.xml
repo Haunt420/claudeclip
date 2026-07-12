@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_category_behavior">
+        <ListPreference
+            android:key="auto_hide_timeout"
+            android:title="@string/pref_auto_hide_title"
+            android:summary="@string/pref_auto_hide_summary"
+            android:defaultValue="15000"
+            android:entries="@array/auto_hide_entries"
+            android:entryValues="@array/auto_hide_values" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_actions">
+        <Preference
+            android:key="customize_actions"
+            android:title="@string/customize_actions"
+            android:summary="@string/action_customization_instruction" />
+        <EditTextPreference
+            android:key="tasker_custom_action"
+            android:title="@string/pref_tasker_action_title"
+            android:summary="@string/pref_tasker_action_summary"
+            android:defaultValue="com.haunted421.clipbubdeep.TEXT_SELECTED"
+            android:inputType="text" />
+    </PreferenceCategory>
+</PreferenceScreen>

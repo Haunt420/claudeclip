@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ClipBubDeep" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#00D9B8</item>
+        <item name="colorPrimaryVariant">#00A896</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorSecondary">#8B2BE2</item>
+        <item name="colorSecondaryVariant">#6A1DB0</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="android:windowBackground">#0A0A14</item>
+        <item name="android:textColorPrimary">#FFFFFFFF</item>
+        <item name="android:textColorSecondary">#AAFFFFFF</item>
+        <item name="android:statusBarColor">#0A0A14</item>
+        <item name="android:navigationBarColor">#0A0A14</item>
+    </style>
+</resources>

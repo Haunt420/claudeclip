@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="menu_container_size">330dp</dimen>
+    <dimen name="main_button_size">72dp</dimen>
+    <dimen name="action_button_size">56dp</dimen>
+    <dimen name="orbit_radius">105dp</dimen>
+</resources>

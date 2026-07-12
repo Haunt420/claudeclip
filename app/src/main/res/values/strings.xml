@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ClipBub Deep</string>
+    <string name="accessibility_service_label">ClipBub Deep Service</string>
+    <string name="accessibility_service_description">Detects text selection in any app and displays a floating radial command menu. Logs searchable clipboard history.</string>
+
+    <string name="status_active">&#9679; SERVICE ACTIVE</string>
+    <string name="status_inactive">&#9675; SERVICE INACTIVE</string>
+    <string name="enable_service">Enable Accessibility Service</string>
+    <string name="settings">Settings</string>
+    <string name="settings_title">Settings</string>
+    <string name="history">History</string>
+    <string name="history_title">Clipboard History</string>
+    <string name="help">Help</string>
+    <string name="help_title">How to Use</string>
+    <string name="open">Open</string>
+    <string name="action_slot">Action button</string>
+    <string name="main_menu">Menu. Tap to expand, drag to move.</string>
+
+    <string name="main_description">Select any text in any app &#8212; a floating radial menu appears.\n\n
+&#9672;  Tap center button to expand or collapse\n
+&#9672;  Drag center button to reposition (remembered)\n
+&#9672;  Auto-hides after 15 seconds\n\n
+Actions:\n
+Share     &#8594;  system share sheet\n
+Copy      &#8594;  copies to clipboard\n
+Clip (tap)       &#8594;  overwrites clipboard\n
+Clip (&#8593; swipe)  &#8594;  prepends to clipboard\n
+Clip (&#8595; swipe)  &#8594;  appends to clipboard\n
+Paste     &#8594;  pastes into focused field\n
+Tasker    &#8594;  broadcasts TEXT_SELECTED\n
+History   &#8594;  opens searchable clip log</string>
+
+    <string name="main_footer">All clipboard entries saved locally (max 50&#160;MB).</string>
+
+    <string name="share">Share</string>
+    <string name="copy">Copy</string>
+    <string name="clip">Clip</string>
+    <string name="paste">Paste</string>
+    <string name="tasker">Tasker</string>
+    <string name="share_via">Share via</string>
+
+    <string name="copied">Copied</string>
+    <string name="appended">Appended</string>
+    <string name="prepended">Prepended</string>
+    <string name="clip_overwritten">Clipboard replaced</string>
+    <string name="clip_restricted">Clipboard restricted &#8212; text copied instead</string>
+    <string name="no_editable_field">No editable field focused</string>
+    <string name="sent_to_tasker">Sent to Tasker</string>
+
+    <string name="search_hint">Search history&#8230;</string>
+    <string name="history_empty">No clipboard entries yet.</string>
+    <string name="clear_all">Clear All</string>
+    <string name="clear_all_confirm">Delete all clipboard history?</string>
+    <string name="delete_entry">Delete entry?</string>
+
+    <string name="action_customization_instruction">Drag to reorder &#183; toggle to enable/disable</string>
+    <string name="customize_actions">Customize Actions</string>
+
+    <string name="pref_category_behavior">Behavior</string>
+    <string name="pref_category_actions">Actions</string>
+    <string name="pref_auto_hide_title">Auto-hide timeout</string>
+    <string name="pref_auto_hide_summary">Time before menu hides automatically</string>
+    <string name="pref_tasker_action_title">Tasker broadcast action</string>
+    <string name="pref_tasker_action_summary">Custom intent action for Tasker integration</string>
+    <string name="action_customization">Customize Actions</string>
+
+    <string name="help_content">ClipBub Deep &#8212; Quick Reference\n\n
+SETUP\n
+1. Tap &#8220;Enable Accessibility Service&#8221;\n
+2. Find &#8220;ClipBub Deep Service&#8221; and enable it\n
+3. Return here &#8212; status dot turns teal when active\n\n
+USING THE MENU\n
+Select any text in any app. The floating menu appears.\n
+Tap the center button to expand the orbit.\n
+Tap any action button to execute.\n
+Drag the center button to move the menu anywhere on screen.\n
+Position is remembered between sessions.\n\n
+CLIP BUTTON GESTURES\n
+Tap          &#8594;  overwrite clipboard with selection\n
+Swipe up     &#8594;  prepend: selection + existing\n
+Swipe down   &#8594;  append: existing + selection\n\n
+HISTORY\n
+Every clipboard change is logged automatically.\n
+Open History to browse, search, and re-copy past entries.\n
+Long-press an entry to delete it.\n
+Maximum storage: 50 MB (oldest entries auto-pruned).\n\n
+TASKER\n
+The Tasker button broadcasts the intent:\n
+com.haunted421.clipbubdeep.TEXT_SELECTED\n
+Extras: text, source_package, timestamp\n
+Customize the action string in Settings.\n\n
+ACTION CUSTOMIZATION\n
+Go to Settings &#8594; Customize Actions to reorder buttons\n
+and enable or disable individual actions.\n\n
+SUPPORTED APPS\n
+Works in any app including web browsers (Chrome, Samsung\n
+Browser), PDF viewers, e-readers, and all standard text\n
+fields. Uses clipboard intercept for apps that do not\n
+expose text through the standard accessibility API.</string>
+
+    <string-array name="auto_hide_entries">
+        <item>5 seconds</item>
+        <item>10 seconds</item>
+        <item>15 seconds</item>
+        <item>30 seconds</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="auto_hide_values">
+        <item>5000</item>
+        <item>10000</item>
+        <item>15000</item>
+        <item>30000</item>
+        <item>0</item>
+    </string-array>
+</resources>

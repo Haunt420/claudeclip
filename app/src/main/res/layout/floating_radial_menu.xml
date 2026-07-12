@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    330dp container. Orbit 105dp radius. 6 buttons at dynamic spacing.
+    Outermost reach: 105 + 28 = 133dp from center. Half container: 165dp. Safe.
+    Buttons are all named btnAction0-5; FloatingMenuManager assigns icons and
+    click handlers at runtime based on the user's ActionRepository configuration.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="330dp"
+    android:layout_height="330dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <ImageButton android:id="@+id/btnAction0"
+        android:layout_width="56dp" android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_action_bg"
+        android:scaleType="center" android:padding="10dp"
+        android:visibility="gone"
+        android:contentDescription="@string/action_slot" />
+
+    <ImageButton android:id="@+id/btnAction1"
+        android:layout_width="56dp" android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_action_bg"
+        android:scaleType="center" android:padding="10dp"
+        android:visibility="gone"
+        android:contentDescription="@string/action_slot" />
+
+    <ImageButton android:id="@+id/btnAction2"
+        android:layout_width="56dp" android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_action_bg"
+        android:scaleType="center" android:padding="10dp"
+        android:visibility="gone"
+        android:contentDescription="@string/action_slot" />
+
+    <ImageButton android:id="@+id/btnAction3"
+        android:layout_width="56dp" android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_action_bg"
+        android:scaleType="center" android:padding="10dp"
+        android:visibility="gone"
+        android:contentDescription="@string/action_slot" />
+
+    <ImageButton android:id="@+id/btnAction4"
+        android:layout_width="56dp" android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_action_bg"
+        android:scaleType="center" android:padding="10dp"
+        android:visibility="gone"
+        android:contentDescription="@string/action_slot" />
+
+    <ImageButton android:id="@+id/btnAction5"
+        android:layout_width="56dp" android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_action_bg"
+        android:scaleType="center" android:padding="10dp"
+        android:visibility="gone"
+        android:contentDescription="@string/action_slot" />
+
+    <ImageButton android:id="@+id/btnMain"
+        android:layout_width="72dp" android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_main_bg"
+        android:src="@drawable/ic_main_menu"
+        android:scaleType="center" android:padding="14dp"
+        android:elevation="12dp"
+        android:contentDescription="@string/main_menu" />
+
+</FrameLayout>
