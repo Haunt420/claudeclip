@@ -11,6 +11,7 @@ import android.os.SystemClock
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -19,7 +20,6 @@ import android.view.WindowManager
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageButton
 import com.haunted421.clipbubdeep.R
-import com.haunted421.clipbubdeep.TextCommandService
 import com.haunted421.clipbubdeep.action.ActionHandler
 import com.haunted421.clipbubdeep.action.ActionRepository
 import kotlin.math.abs
@@ -43,7 +43,13 @@ class FloatingMenuManager(
 
     private val handler = Handler(Looper.getMainLooper())
     private val autoHideRunnable = Runnable { hideMenu() }
+
+    // Publicly readable so SelectionDetector can consult the same suppression
+    // window this class writes to during drag/tap handling. This is the single
+    // source of truth for "ignore incoming selection events right now" — do
+    // not reintroduce a duplicate field anywhere else.
     var ignoreDeselectionUntil = 0L
+        private set
 
     private val vibrator: Vibrator by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -56,6 +62,7 @@ class FloatingMenuManager(
     private val touchSlop by lazy { ViewConfiguration.get(context).scaledTouchSlop }
 
     companion object {
+        private const val TAG                = "ClipBub.Menu"
         private const val RADIUS_DP          = 105f
         private const val CONTAINER_DP       = 330f
         private const val AUTO_HIDE_MS       = 15_000L
@@ -70,13 +77,13 @@ class FloatingMenuManager(
         private const val PREF_HAS_POS       = "menu_has_pos"
     }
 
-    // Button IDs in layout order — must match floating_radial_menu.xml
     private val buttonIds = listOf(
         R.id.btnAction0, R.id.btnAction1, R.id.btnAction2,
         R.id.btnAction3, R.id.btnAction4, R.id.btnAction5
     )
 
     fun showMenu(selectionRect: Rect, text: String, pkg: String) {
+        Log.d(TAG, "showMenu called, text=\"${text.take(40)}\" pkg=$pkg existingContainer=${container != null}")
         currentText = text
         currentPkg  = pkg
         if (container != null) { updatePosition(selectionRect); return }
@@ -84,7 +91,6 @@ class FloatingMenuManager(
         container = LayoutInflater.from(context).inflate(R.layout.floating_radial_menu, null)
         btnMain = container!!.findViewById(R.id.btnMain)
 
-        // Wire up enabled actions to the available button slots
         val enabledActions = actionRepository.getEnabledActions().take(6)
         actionButtons.clear()
         buttonIds.forEachIndexed { i, id ->
@@ -121,13 +127,15 @@ class FloatingMenuManager(
         )
 
         calculatePosition(selectionRect)
-        windowManager.addView(container, params)
+        try {
+            windowManager.addView(container, params)
+            Log.d(TAG, "container added to WindowManager at x=${params?.x} y=${params?.y}")
+        } catch (e: Exception) {
+            Log.e(TAG, "FAILED to add overlay view to WindowManager", e)
+        }
         handler.postDelayed(autoHideRunnable, AUTO_HIDE_MS)
     }
 
-    /**
-     * Clip button: tap = overwrite, swipe up = prepend, swipe down = append.
-     */
     private fun setupClipButton(btn: ImageButton) {
         val threshold = SWIPE_THRESHOLD_DP * context.resources.displayMetrics.density
         var downY = 0f
@@ -185,6 +193,7 @@ class FloatingMenuManager(
     }
 
     fun hideMenu() {
+        if (container != null) Log.d(TAG, "hideMenu called")
         handler.removeCallbacks(autoHideRunnable)
         isExpanded = false
         container?.let { v -> try { windowManager.removeView(v) } catch (_: Exception) {} }

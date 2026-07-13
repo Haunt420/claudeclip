@@ -12,11 +12,15 @@ import android.view.accessibility.AccessibilityNodeInfo
 import com.haunted421.clipbubdeep.TextCommandService
 
 class SelectionDetector(
+    // Supplies the current suppression deadline from whoever owns menu
+    // interaction state (FloatingMenuManager). Previously this class kept its
+    // own separate ignoreUntil field that nothing ever wrote to — dragging or
+    // tapping the menu had zero effect on event handling as a result.
+    private val ignoreUntilProvider: () -> Long,
     private val onTextSelected: (text: String, pkg: String, rect: Rect) -> Unit,
     private val onSelectionCleared: () -> Unit
 ) {
     private val handler = Handler(Looper.getMainLooper())
-    private var ignoreUntil = 0L
     private var pendingClipListener: ClipboardManager.OnPrimaryClipChangedListener? = null
 
     companion object {
@@ -44,31 +48,42 @@ class SelectionDetector(
     }
 
     fun handleEvent(event: AccessibilityEvent, root: AccessibilityNodeInfo?, service: TextCommandService) {
-        if (System.currentTimeMillis() < ignoreUntil) return
+        val ignoreUntil = ignoreUntilProvider()
+        if (System.currentTimeMillis() < ignoreUntil) {
+            Log.d(TAG, "suppressed: within ignore window (${ignoreUntil - System.currentTimeMillis()}ms remaining)")
+            return
+        }
 
         val pkg = event.packageName?.toString() ?: ""
-        if (pkg in EXCLUDED_PACKAGES) return
+        if (pkg in EXCLUDED_PACKAGES) {
+            Log.d(TAG, "suppressed: excluded package $pkg")
+            return
+        }
 
-        // Dismiss on navigation events
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            Log.d(TAG, "window state changed, dismissing menu")
             handler.post { onSelectionCleared() }
             return
         }
 
-        if (root == null) return
+        if (root == null) {
+            Log.d(TAG, "rootInActiveWindow was null, cannot search")
+            return
+        }
 
         try {
-            // Pass 1 + 2: standard node text and event text fallback
             val standardResult = resolveStandard(root, event)
             if (standardResult != null) {
+                Log.d(TAG, "PASS 1/2 resolved: \"${standardResult.first.take(40)}\"")
                 cancelClipListener(service)
                 handler.post { onTextSelected(standardResult.first, pkg, standardResult.second) }
                 return
             }
+            Log.d(TAG, "PASS 1/2 found nothing, trying clipboard intercept")
 
-            // Pass 3: clipboard intercept for web content / PDF / custom renderers
             val copyNode = findCopyNode(root)
             if (copyNode != null) {
+                Log.d(TAG, "PASS 3: found ACTION_COPY node, firing copy + listening for clipboard")
                 try {
                     val rect = Rect()
                     copyNode.getBoundsInScreen(rect)
@@ -78,6 +93,7 @@ class SelectionDetector(
                 }
                 return
             }
+            Log.d(TAG, "PASS 3 found no ACTION_COPY node either — nothing to detect on this event")
         } finally {
             root.recycle()
         }
@@ -127,6 +143,7 @@ class SelectionDetector(
                 pendingClipListener = null
                 handler.removeCallbacksAndMessages("clip_timeout")
                 val text = try { cm.primaryClip?.getItemAt(0)?.text?.toString()?.trim() } catch (e: Exception) { null }
+                Log.d(TAG, "clipboard changed, got: \"${text?.take(40)}\"")
                 if (!text.isNullOrBlank()) {
                     handler.post { onTextSelected(text, pkg, rect) }
                 }
@@ -137,6 +154,7 @@ class SelectionDetector(
 
         handler.postAtTime({
             if (pendingClipListener === listener) {
+                Log.d(TAG, "clipboard intercept timed out after ${CLIP_TIMEOUT_MS}ms — host app did not copy")
                 cm.removePrimaryClipChangedListener(listener)
                 pendingClipListener = null
             }
